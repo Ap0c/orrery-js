@@ -3,7 +3,7 @@
 // Camera settings.
 var CAMERA = {
 	x: 0,
-	y: 150,
+	y: 160,
 	z: 0,
 	fov: 90,
 	near: 0.1,
@@ -31,19 +31,19 @@ var BODIES = {
 	},
 	venus: {
 		colour: 0xfac8b4,
-		position: {x: 35, y: 0, z: 0},
+		position: {x: 0, y: 0, z: 35},
 		radius: 0.9,
 		period: 6
 	},
 	earth: {
 		colour: 0x28d2ff,
-		position: {x: 40, y: 0, z: 0},
+		position: {x: -40, y: 0, z: 0},
 		radius: 1,
 		period: 10
 	},
 	mars: {
 		colour: 0xff5a1e,
-		position: {x: 45, y: 0, z: 0},
+		position: {x: 0, y: 0, z: -45},
 		radius: 0.5,
 		period: 20
 	},
@@ -55,19 +55,19 @@ var BODIES = {
 	},
 	saturn: {
 		colour: 0xdca028,
-		position: {x: 100, y: 0, z: 0},
+		position: {x: 0, y: 0, z: 100},
 		radius: 9.5,
 		period: 300
 	},
 	uranus: {
 		colour: 0xb4c8f0,
-		position: {x: 130, y: 0, z: 0},
+		position: {x: -130, y: 0, z: 0},
 		radius: 4,
 		period: 840
 	},
 	neptune: {
 		colour: 0x0032f0,
-		position: {x: 150, y: 0, z: 0},
+		position: {x: 0, y: 0, z: -150},
 		radius: 3.9,
 		period: 1650
 	}
