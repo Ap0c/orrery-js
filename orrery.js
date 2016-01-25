@@ -11,7 +11,15 @@ var CAMERA_FAR = 1000;
 // Dimensions.
 var DISPLAY_WIDTH = window.innerWidth;
 var DISPLAY_HEIGHT = window.innerHeight;
-var PLANET_RADIUS = 1;
+
+// Planets.
+var BODIES = {
+	theSun: {
+		colour: 0xffff00,
+		position: [0, 0, 0],
+		radius: 1
+	}
+};
 
 // ----- Functions ----- //
 
@@ -40,26 +48,31 @@ function setupRenderer () {
 
 }
 
-// Creates and returns a celestial body from a geometry and a material.
-function celestialBody (geometry, meterial, position) {
+// Creates and returns a celestial body from a material and its properties.
+function celestialBody (info) {
+
+	var geometry = new THREE.SphereGeometry(info.radius, 32, 32);
+	var material = new THREE.MeshBasicMaterial({color: info.colour});
 
 	var pivot = new THREE.Object3D();
-	var body = new THREE.Mesh(geometry, meterial);
+	var body = new THREE.Mesh(geometry, material);
 
-	body.position.set.apply(this, position);
+	body.position.set.apply(this, info.position);
 	pivot.add(body);
 
 	return pivot;
 
 }
 
-function addPlanets (scene) {
+// Adds celestial bodies to the scene.
+function addBodies (scene) {
 
-	var geometry = new THREE.SphereGeometry(PLANET_RADIUS, 32, 32);
-	var material = new THREE.MeshBasicMaterial({color: 0xffff00});
+	for (var body in BODIES) {
 
-	var planetOne = celestialBody(geometry, material, [0, 0, 0]);
-	scene.add(planetOne);
+		var newBody = celestialBody(BODIES[body]);
+		scene.add(newBody);
+
+	}
 
 }
 
@@ -84,7 +97,7 @@ function setup () {
 	var controls = new THREE.OrbitControls(camera);
 	var renderer = setupRenderer();
 
-	addPlanets(scene);
+	addBodies(scene);
 
 	startRender(scene, camera, controls, renderer);
 
