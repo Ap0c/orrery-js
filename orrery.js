@@ -3,7 +3,7 @@
 // Camera settings.
 var CAMERA = {
 	x: 0,
-	y: 7,
+	y: 5,
 	z: 7,
 	fov: 75,
 	near: 0.1,
@@ -25,10 +25,13 @@ var BODIES = {
 	},
 	mercury: {
 		colour: 0xb4b4b4,
-		position: {x: 3, y: 3, z: 3},
-		radius: 1
+		position: {x: 3, y: 0, z: 0},
+		radius: 1,
+		period: 10
 	}
 };
+
+var FPS = 60;
 
 
 // ----- Functions ----- //
@@ -77,21 +80,57 @@ function celestialBody (info) {
 // Adds celestial bodies to the scene.
 function addBodies (scene, bodies) {
 
+	var meshes = {};
+
 	for (var body in bodies) {
 
-		var newBody = celestialBody(bodies[body]);
-		scene.add(newBody);
+		var bodyMesh = celestialBody(bodies[body]);
+		scene.add(bodyMesh);
+		meshes[body] = bodyMesh;
+
+	}
+
+	return meshes;
+
+}
+
+// Returns an object with the orbital increments per frame for each body.
+function calcOrbits (bodies) {
+
+	var orbits = {};
+
+	for (var body in bodies) {
+
+		var properties = bodies[body];
+
+		if (properties.period) {
+			orbits[body] = Math.PI / properties.period / FPS;
+		}
+
+	}
+
+	return orbits;
+
+}
+
+// Increments the orbit of each body.
+function updateOrbits (meshes, orbits) {
+
+	for (var orbit in orbits) {
+
+		meshes[orbit].rotation.y += orbits[orbit];
 
 	}
 
 }
 
 // Creates the render function and begins rendering.
-function startRender (components) {	
+function startRender (components, meshes, orbits) {	
 
 	function render () {
 		requestAnimationFrame(render);
 		components.controls.update();
+		updateOrbits(meshes, orbits);
 		components.renderer.render(components.scene, components.camera);
 	}
 
@@ -105,13 +144,15 @@ function setup () {
 	var components = {
 		scene: new THREE.Scene(),
 		camera: setupCamera(CAMERA, DISPLAY),
-		controls: new THREE.OrbitControls(camera),
 		renderer: setupRenderer(DISPLAY)
 	};
 
-	addBodies(scene, BODIES);
+	components.controls = new THREE.OrbitControls(components.camera);
 
-	startRender(components);
+	var orbits = calcOrbits(BODIES);
+	var meshes = addBodies(components.scene, BODIES);
+
+	startRender(components, meshes, orbits);
 
 }
 
