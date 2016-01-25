@@ -87,12 +87,12 @@ function addBodies (scene, bodies) {
 }
 
 // Creates the render function and begins rendering.
-function startRender (scene, camera, controls, renderer) {	
+function startRender (components) {	
 
 	function render () {
 		requestAnimationFrame(render);
-		controls.update();
-		renderer.render(scene, camera);
+		components.controls.update();
+		components.renderer.render(components.scene, components.camera);
 	}
 
 	render();
@@ -102,14 +102,16 @@ function startRender (scene, camera, controls, renderer) {
 // Sets up and launches the application.
 function setup () {
 
-	var scene = new THREE.Scene();
-	var camera = setupCamera(CAMERA, DISPLAY);
-	var controls = new THREE.OrbitControls(camera);
-	var renderer = setupRenderer(DISPLAY);
+	var components = {
+		scene: new THREE.Scene(),
+		camera: setupCamera(CAMERA, DISPLAY),
+		controls: new THREE.OrbitControls(camera),
+		renderer: setupRenderer(DISPLAY)
+	};
 
 	addBodies(scene, BODIES);
 
-	startRender(scene, camera, controls, renderer);
+	startRender(components);
 
 }
 
