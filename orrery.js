@@ -3,9 +3,9 @@
 // Camera settings.
 var CAMERA = {
 	x: 0,
-	y: 5,
-	z: 7,
-	fov: 75,
+	y: 15,
+	z: 0,
+	fov: 90,
 	near: 0.1,
 	far: 1000
 };
@@ -26,6 +26,24 @@ var BODIES = {
 	mercury: {
 		colour: 0xb4b4b4,
 		position: {x: 3, y: 0, z: 0},
+		radius: 1,
+		period: 1
+	},
+	venus: {
+		colour: 0xfac8b4,
+		position: {x: 6, y: 0, z: 0},
+		radius: 1,
+		period: 3
+	},
+	earth: {
+		colour: 0x28d2ff,
+		position: {x: 9, y: 0, z: 0},
+		radius: 1,
+		period: 5
+	},
+	mars: {
+		colour: 0xff5a1e,
+		position: {x: 12, y: 0, z: 0},
 		radius: 1,
 		period: 10
 	}
