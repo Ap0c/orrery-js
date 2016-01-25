@@ -107,7 +107,7 @@ function setupRenderer (display) {
 function celestialBody (info) {
 
 	var geometry = new THREE.SphereGeometry(info.radius, 32, 32);
-	var material = new THREE.MeshBasicMaterial({color: info.colour});
+	var material = new THREE.MeshLambertMaterial({color: info.colour, shininess: info.shininess || null});
 
 	var pivot = new THREE.Object3D();
 	var body = new THREE.Mesh(geometry, material);
@@ -155,6 +155,18 @@ function calcOrbits (bodies) {
 
 }
 
+// Creates a light source at the Sun, and a general ambient light.
+function createLights (scene) {
+
+	var sunLight = new THREE.PointLight(0xffffff, 2, 0);
+	var ambientLight = new THREE.AmbientLight(0xaaaaaa);
+
+	sunLight.position.set(0, 0, 0);
+	scene.add(sunLight);
+	scene.add(ambientLight);
+
+}
+
 // Increments the orbit of each body.
 function updateOrbits (meshes, orbits) {
 
@@ -193,6 +205,7 @@ function setup () {
 
 	var orbits = calcOrbits(BODIES);
 	var meshes = addBodies(components.scene, BODIES);
+	createLights(components.scene);
 
 	startRender(components, meshes, orbits);
 
