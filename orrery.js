@@ -2,10 +2,10 @@
 
 // Camera settings.
 var CAMERA = {
-	x: 0,
-	y: 160,
-	z: 0,
-	fov: 90,
+	x: -180,
+	y: 100,
+	z: 200,
+	leftRight: 180,
 	near: 0.1,
 	far: 1000
 };
@@ -81,9 +81,9 @@ var FPS = 60;
 // Creates and returns the camera.
 function setupCamera (settings, display) {
 
-	var aspectRatio = display.width / display.height;
-	var camera = new THREE.PerspectiveCamera(settings.fov, aspectRatio,
-		settings.near, settings.far);
+	var topBottom = settings.leftRight * display.height / display.width;
+	var camera = new THREE.OrthographicCamera(-settings.leftRight, settings.leftRight,
+		topBottom, -topBottom, settings.near, settings.far);
 
 	camera.position.set(settings.x, settings.y, settings.z);
 
