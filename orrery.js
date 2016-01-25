@@ -2,8 +2,8 @@
 
 // Camera settings.
 var CAMERA = {
-	x: -180,
-	y: 100,
+	x: 120,
+	y: 120,
 	z: 200,
 	leftRight: 180,
 	near: 0.1,
@@ -16,13 +16,15 @@ var DISPLAY = {
 	height: window.innerHeight
 };
 
-// Planets.
-var BODIES = {
-	theSun: {
-		colour: 0xffff00,
-		position: {x: 0, y: 0, z: 0},
-		radius: 20
-	},
+// Properties of the Sun.
+var SUN = {
+	colour: 0xffff00,
+	position: {x: 0, y: 0, z: 0},
+	radius: 20
+};
+
+// Properties of the planets.
+var PLANETS = {
 	mercury: {
 		colour: 0xb4b4b4,
 		position: {x: 30, y: 0, z: 0},
@@ -103,32 +105,32 @@ function setupRenderer (display) {
 
 }
 
-// Creates and returns a celestial body from a material and its properties.
-function celestialBody (info) {
+// Creates and returns a planet from its properties.
+function createPlanet (info) {
 
 	var geometry = new THREE.SphereGeometry(info.radius, 32, 32);
-	var material = new THREE.MeshLambertMaterial({color: info.colour, shininess: info.shininess || null});
+	var material = new THREE.MeshLambertMaterial({color: info.colour});
 
 	var pivot = new THREE.Object3D();
-	var body = new THREE.Mesh(geometry, material);
+	var planet = new THREE.Mesh(geometry, material);
 
-	body.position.set(info.position.x, info.position.y, info.position.z);
-	pivot.add(body);
+	planet.position.set(info.position.x, info.position.y, info.position.z);
+	pivot.add(planet);
 
 	return pivot;
 
 }
 
-// Adds celestial bodies to the scene.
-function addBodies (scene, bodies) {
+// Adds planets to the scene.
+function addPlanets (scene, planets) {
 
 	var meshes = {};
 
-	for (var body in bodies) {
+	for (var planet in planets) {
 
-		var bodyMesh = celestialBody(bodies[body]);
-		scene.add(bodyMesh);
-		meshes[body] = bodyMesh;
+		var planetMesh = createPlanet(planets[planet]);
+		scene.add(planetMesh);
+		meshes[planet] = planetMesh;
 
 	}
 
@@ -136,17 +138,29 @@ function addBodies (scene, bodies) {
 
 }
 
-// Returns an object with the orbital increments per frame for each body.
-function calcOrbits (bodies) {
+// Creates the Sun and adds it to the scene.
+function createSun (scene, info) {
+
+	var geometry = new THREE.SphereGeometry(info.radius, 32, 32);
+	var material = new THREE.MeshLambertMaterial({color: info.colour, emissive: 0xffff00});
+
+	var theSun = new THREE.Mesh(geometry, material);
+	theSun.position.set(info.position.x, info.position.y, info.position.z);
+	scene.add(theSun);
+
+}
+
+// Returns an object with the orbital increments per frame for each planet.
+function calcOrbits (planets) {
 
 	var orbits = {};
 
-	for (var body in bodies) {
+	for (var planet in planets) {
 
-		var properties = bodies[body];
+		var properties = planets[planet];
 
 		if (properties.period) {
-			orbits[body] = Math.PI / properties.period / FPS;
+			orbits[planet] = Math.PI / properties.period / FPS;
 		}
 
 	}
@@ -158,8 +172,8 @@ function calcOrbits (bodies) {
 // Creates a light source at the Sun, and a general ambient light.
 function createLights (scene) {
 
-	var sunLight = new THREE.PointLight(0xffffff, 2, 0);
-	var ambientLight = new THREE.AmbientLight(0xaaaaaa);
+	var sunLight = new THREE.PointLight(0xffffff, 1.2, 0);
+	var ambientLight = new THREE.AmbientLight(0x999999);
 
 	sunLight.position.set(0, 0, 0);
 	scene.add(sunLight);
@@ -167,7 +181,7 @@ function createLights (scene) {
 
 }
 
-// Increments the orbit of each body.
+// Increments the orbit of each planet.
 function updateOrbits (meshes, orbits) {
 
 	for (var orbit in orbits) {
@@ -203,8 +217,10 @@ function setup () {
 
 	components.controls = new THREE.OrbitControls(components.camera);
 
-	var orbits = calcOrbits(BODIES);
-	var meshes = addBodies(components.scene, BODIES);
+	var orbits = calcOrbits(PLANETS);
+	var meshes = addPlanets(components.scene, PLANETS);
+
+	createSun(components.scene, SUN);
 	createLights(components.scene);
 
 	startRender(components, meshes, orbits);
