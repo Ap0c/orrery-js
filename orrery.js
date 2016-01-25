@@ -3,7 +3,7 @@
 // Camera settings.
 var CAMERA = {
 	x: 0,
-	y: 3,
+	y: 7,
 	z: 7,
 	fov: 75,
 	near: 0.1,
@@ -20,10 +20,16 @@ var DISPLAY = {
 var BODIES = {
 	theSun: {
 		colour: 0xffff00,
-		position: [0, 0, 0],
+		position: {x: 0, y: 0, z: 0},
+		radius: 1
+	},
+	mercury: {
+		colour: 0xb4b4b4,
+		position: {x: 3, y: 3, z: 3},
 		radius: 1
 	}
 };
+
 
 // ----- Functions ----- //
 
@@ -61,7 +67,7 @@ function celestialBody (info) {
 	var pivot = new THREE.Object3D();
 	var body = new THREE.Mesh(geometry, material);
 
-	body.position.set.apply(this, info.position);
+	body.position.set(info.position.x, info.position.y, info.position.z);
 	pivot.add(body);
 
 	return pivot;
@@ -73,7 +79,7 @@ function addBodies (scene, bodies) {
 
 	for (var body in bodies) {
 
-		var newBody = celestialBody(BODIES[body]);
+		var newBody = celestialBody(bodies[body]);
 		scene.add(newBody);
 
 	}
