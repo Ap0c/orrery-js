@@ -1,16 +1,20 @@
 // ----- Settings ----- //
 
 // Camera settings.
-var CAMERA_X = 0;
-var CAMERA_Y = 3;
-var CAMERA_Z = 7;
-var CAMERA_FOV = 75;
-var CAMERA_NEAR = 0.1;
-var CAMERA_FAR = 1000;
+var CAMERA = {
+	x: 0,
+	y: 3,
+	z: 7,
+	fov: 75,
+	near: 0.1,
+	far: 1000
+};
 
 // Dimensions.
-var DISPLAY_WIDTH = window.innerWidth;
-var DISPLAY_HEIGHT = window.innerHeight;
+var DISPLAY = {
+	width: window.innerWidth,
+	height: window.innerHeight
+};
 
 // Planets.
 var BODIES = {
@@ -24,23 +28,23 @@ var BODIES = {
 // ----- Functions ----- //
 
 // Creates and returns the camera.
-function setupCamera () {
+function setupCamera (settings, display) {
 
-	var aspectRatio = DISPLAY_WIDTH / DISPLAY_HEIGHT;
-	var camera = new THREE.PerspectiveCamera(CAMERA_FOV, aspectRatio,
-		CAMERA_NEAR, CAMERA_FAR);
+	var aspectRatio = display.width / display.height;
+	var camera = new THREE.PerspectiveCamera(settings.fov, aspectRatio,
+		settings.near, settings.far);
 
-	camera.position.set(CAMERA_X, CAMERA_Y, CAMERA_Z);
+	camera.position.set(settings.x, settings.y, settings.z);
 
 	return camera;
 
 }
 
 // Builds the renderer, adds it to the page, and returns it.
-function setupRenderer () {
+function setupRenderer (display) {
 
 	var renderer = new THREE.WebGLRenderer();
-	renderer.setSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+	renderer.setSize(display.width, display.height);
 
 	document.body.appendChild(renderer.domElement);
 
@@ -65,9 +69,9 @@ function celestialBody (info) {
 }
 
 // Adds celestial bodies to the scene.
-function addBodies (scene) {
+function addBodies (scene, bodies) {
 
-	for (var body in BODIES) {
+	for (var body in bodies) {
 
 		var newBody = celestialBody(BODIES[body]);
 		scene.add(newBody);
@@ -93,11 +97,11 @@ function startRender (scene, camera, controls, renderer) {
 function setup () {
 
 	var scene = new THREE.Scene();
-	var camera = setupCamera();
+	var camera = setupCamera(CAMERA, DISPLAY);
 	var controls = new THREE.OrbitControls(camera);
-	var renderer = setupRenderer();
+	var renderer = setupRenderer(DISPLAY);
 
-	addBodies(scene);
+	addBodies(scene, BODIES);
 
 	startRender(scene, camera, controls, renderer);
 
