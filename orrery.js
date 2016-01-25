@@ -39,12 +39,41 @@ function setupRenderer () {
 
 }
 
+// Creates and returns a celestial body from a geometry and a material.
+function celestialBody (geometry, meterial, position) {
+
+	let pivot = new THREE.Object3D();
+	let body = new THREE.Mesh(geometry, meterial);
+
+	body.position.set.apply(this, position);
+	pivot.add(body);
+
+	return pivot;
+
+}
+
+// Creates the render function and begins rendering.
+function startRender (scene, camera, controls, renderer) {	
+
+	function render () {
+		requestAnimationFrame(render);
+		controls.update();
+		renderer.render(scene, camera);
+	}
+
+	render();
+
+}
+
 // Sets up and launches the application.
 function setup () {
 
 	let scene = new THREE.Scene();
 	let camera = setupCamera();
 	let controls = new THREE.OrbitControls(camera);
+	let renderer = setupRenderer();
+
+	startRender(scene, camera, controls, renderer);
 
 }
 
