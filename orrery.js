@@ -1,24 +1,25 @@
 // ----- Settings ----- //
 
 // Camera settings.
-let CAMERA_X = 0;
-let CAMERA_Y = 3;
-let CAMERA_Z = 7;
-let CAMERA_FOV = 75;
-let CAMERA_NEAR = 0.1;
-let CAMERA_FAR = 1000;
+var CAMERA_X = 0;
+var CAMERA_Y = 3;
+var CAMERA_Z = 7;
+var CAMERA_FOV = 75;
+var CAMERA_NEAR = 0.1;
+var CAMERA_FAR = 1000;
 
 // Dimensions.
-let DISPLAY_WIDTH = window.innerWidth;
-let DISPLAY_HEIGHT = window.innerHeight;
+var DISPLAY_WIDTH = window.innerWidth;
+var DISPLAY_HEIGHT = window.innerHeight;
+var PLANET_RADIUS = 1;
 
 // ----- Functions ----- //
 
 // Creates and returns the camera.
 function setupCamera () {
 
-	let aspectRatio = DISPLAY_WIDTH / DISPLAY_HEIGHT;
-	let camera = new THREE.PerspectiveCamera(CAMERA_FOV, aspectRatio,
+	var aspectRatio = DISPLAY_WIDTH / DISPLAY_HEIGHT;
+	var camera = new THREE.PerspectiveCamera(CAMERA_FOV, aspectRatio,
 		CAMERA_NEAR, CAMERA_FAR);
 
 	camera.position.set(CAMERA_X, CAMERA_Y, CAMERA_Z);
@@ -30,7 +31,7 @@ function setupCamera () {
 // Builds the renderer, adds it to the page, and returns it.
 function setupRenderer () {
 
-	let renderer = new THREE.WebGLRenderer();
+	var renderer = new THREE.WebGLRenderer();
 	renderer.setSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
 	document.body.appendChild(renderer.domElement);
@@ -42,13 +43,23 @@ function setupRenderer () {
 // Creates and returns a celestial body from a geometry and a material.
 function celestialBody (geometry, meterial, position) {
 
-	let pivot = new THREE.Object3D();
-	let body = new THREE.Mesh(geometry, meterial);
+	var pivot = new THREE.Object3D();
+	var body = new THREE.Mesh(geometry, meterial);
 
 	body.position.set.apply(this, position);
 	pivot.add(body);
 
 	return pivot;
+
+}
+
+function addPlanets (scene) {
+
+	var geometry = new THREE.SphereGeometry(PLANET_RADIUS, 32, 32);
+	var material = new THREE.MeshBasicMaterial({color: 0xffff00});
+
+	var planetOne = celestialBody(geometry, material, [0, 0, 0]);
+	scene.add(planetOne);
 
 }
 
@@ -68,10 +79,12 @@ function startRender (scene, camera, controls, renderer) {
 // Sets up and launches the application.
 function setup () {
 
-	let scene = new THREE.Scene();
-	let camera = setupCamera();
-	let controls = new THREE.OrbitControls(camera);
-	let renderer = setupRenderer();
+	var scene = new THREE.Scene();
+	var camera = setupCamera();
+	var controls = new THREE.OrbitControls(camera);
+	var renderer = setupRenderer();
+
+	addPlanets(scene);
 
 	startRender(scene, camera, controls, renderer);
 
