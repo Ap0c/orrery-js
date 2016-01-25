@@ -9,15 +9,16 @@ let CAMERA_NEAR = 0.1;
 let CAMERA_FAR = 1000;
 
 // Dimensions.
-let WINDOW_ASPECT = window.innerWidth / window.innerHeight;
-
+let DISPLAY_WIDTH = window.innerWidth;
+let DISPLAY_HEIGHT = window.innerHeight;
 
 // ----- Functions ----- //
 
 // Creates and returns the camera.
 function setupCamera () {
 
-	let camera = new THREE.PerspectiveCamera(CAMERA_FOV, WINDOW_ASPECT,
+	let aspectRatio = DISPLAY_WIDTH / DISPLAY_HEIGHT;
+	let camera = new THREE.PerspectiveCamera(CAMERA_FOV, aspectRatio,
 		CAMERA_NEAR, CAMERA_FAR);
 
 	camera.position.set(CAMERA_X, CAMERA_Y, CAMERA_Z);
@@ -26,11 +27,24 @@ function setupCamera () {
 
 }
 
+// Builds the renderer, adds it to the page, and returns it.
+function setupRenderer () {
+
+	let renderer = new THREE.WebGLRenderer();
+	renderer.setSize(DISPLAY_WIDTH, DISPLAY_HEIGHT);
+
+	document.body.appendChild(renderer.domElement);
+
+	return renderer;
+
+}
+
 // Sets up and launches the application.
 function setup () {
 
 	let scene = new THREE.Scene();
 	let camera = setupCamera();
+	let controls = new THREE.OrbitControls(camera);
 
 }
 
