@@ -76,6 +76,9 @@ var PLANETS = {
 };
 
 var FPS = 60;
+var BG_COLOUR = 0x000000;
+var SUN_COLOUR = 0xffffff;
+var AMB_COLOUR = 0x999999;
 
 
 // ----- Functions ----- //
@@ -98,6 +101,7 @@ function setupRenderer (display) {
 
 	var renderer = new THREE.WebGLRenderer();
 	renderer.setSize(display.width, display.height);
+	renderer.setClearColor(BG_COLOUR);
 
 	document.body.appendChild(renderer.domElement);
 
@@ -142,7 +146,10 @@ function addPlanets (scene, planets) {
 function createSun (scene, info) {
 
 	var geometry = new THREE.SphereGeometry(info.radius, 32, 32);
-	var material = new THREE.MeshLambertMaterial({color: info.colour, emissive: 0xffff00});
+	var material = new THREE.MeshLambertMaterial({
+		color: info.colour,
+		emissive: 0xffff00
+	});
 
 	var theSun = new THREE.Mesh(geometry, material);
 	theSun.position.set(info.position.x, info.position.y, info.position.z);
@@ -172,8 +179,8 @@ function calcOrbits (planets) {
 // Creates a light source at the Sun, and a general ambient light.
 function createLights (scene) {
 
-	var sunLight = new THREE.PointLight(0xffffff, 1.2, 0);
-	var ambientLight = new THREE.AmbientLight(0x999999);
+	var sunLight = new THREE.PointLight(SUN_COLOUR, 1.2, 0);
+	var ambientLight = new THREE.AmbientLight(AMB_COLOUR);
 
 	sunLight.position.set(0, 0, 0);
 	scene.add(sunLight);
